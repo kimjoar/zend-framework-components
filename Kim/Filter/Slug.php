@@ -1,23 +1,27 @@
 <?php
-/**
- * Zend Framework
- *
- * @category   Kim
- * @package    Kim_Date
- * @subpackage Kim_Date_DateDifference
- * @author     Kim Joar Bekkelund <mail@kimjoar.net>
- */
 
-/**
- * Include needed Date classes
- */
-require_once 'Zend/Text/Exception.php';
+require_once 'Zend/Filter/Interface.php';
 
-/**
- * Get the text slug
- *
- */
-class Kim_Text_Slug
+class Kim_Filter_Slug implements Zend_Filter_Interface
 {
+    public function filter($value)
+    {
+      $cleanString = strtolower($value);
 
+      // strip all non word chars
+      $cleanString = preg_replace('/\W/', ' ', $cleanString);
+
+      // replace all white space sections with a dash
+      $cleanString = preg_replace('/\ +/', '-', $cleanString);
+
+      // trim dashes
+      $cleanString = preg_replace('/\-$/', '', $cleanString);
+      $cleanString = preg_replace('/^\-/', '', $cleanString);
+
+      if (strlen($cleanString) == 0) {
+        return null;
+      }
+
+      return $cleanString;
+    }
 }
